@@ -10,6 +10,13 @@
 #include <leveldb/write_batch.h>
 #include <libnuraft/buffer_serializer.hxx>
 
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#define PORT 8080
+
 namespace cbdc::raft {
     template<bool First>
     auto get_first_or_last_index(leveldb::DB* db,
@@ -37,6 +44,7 @@ namespace cbdc::raft {
         return ret;
     }
 
+    //not sure if this needs changing
     auto log_store::load(const std::string& db_dir) -> bool {
         m_write_opt.sync = false;
 
@@ -63,16 +71,20 @@ namespace cbdc::raft {
         return true;
     }
 
+    
+    //don't need for oci
     auto log_store::next_slot() const -> uint64_t {
         std::lock_guard<std::mutex> l(m_db_mut);
         return m_next_idx;
     }
 
+    //write to our databse
     auto log_store::start_index() const -> uint64_t {
         std::lock_guard<std::mutex> l(m_db_mut);
         return m_start_idx;
     }
 
+    //read from our database
     auto log_entry_from_slice(const leveldb::Slice& slice)
         -> nuraft::ptr<nuraft::log_entry> {
         auto buf = nuraft::buffer::alloc(slice.size());
@@ -82,6 +94,7 @@ namespace cbdc::raft {
         return entry;
     }
 
+    //read from our database
     auto log_store::last_entry() const -> nuraft::ptr<nuraft::log_entry> {
         nuraft::ptr<nuraft::log_entry> last_entry;
         {
@@ -121,6 +134,7 @@ namespace cbdc::raft {
         return std::make_pair(slice, std::move(value_buf));
     }
 
+    //write to our database
     auto log_store::append(nuraft::ptr<nuraft::log_entry>& entry) -> uint64_t {
         const auto value = get_value_slice(entry);
 
@@ -334,5 +348,31 @@ namespace cbdc::raft {
             const auto status = m_db->Write(sync_opts, &batch);
             return status.ok();
         }
+    }
+
+    auto connectToServer(){
+        int status, valread, client_fd;
+        struct sockaddr_in serv_addr;
+        char* hello = "Hello from client";
+        char buffer[1024] = { 0 };
+        if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+            printf("\n Socket creation error \n");
+            return -1;
+        }
+    
+        serv_addr.sin_family = AF_INET;
+        serv_addr.sin_port = htons(PORT);
+    
+        // replace with the ip with the ip of the server 
+        if (inet_pton(AF_INET, "127.4.4.21", &serv_addr.sin_addr)<= 0) {
+            printf("\nInvalid address/ Address not supported \n");
+            return -1;
+        }
+    
+        if ((status = connect(client_fd, (struct sockaddr*)&serv_addr,sizeof(serv_addr)))< 0) {
+            printf("\nConnection Failed \n");
+            return -1;
+        }
+        return 0;
     }
 }
