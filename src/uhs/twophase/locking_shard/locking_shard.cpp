@@ -20,7 +20,7 @@
 
 namespace cbdc::locking_shard {
 
-    auto locking_shard::connectToServer(){
+    auto connectToServer(){
         print("\nTrying to connect\n");
         int status, valread, client_fd;
         struct sockaddr_in serv_addr;
