@@ -16,6 +16,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#define PORT 8080
 
 namespace cbdc::locking_shard {
 
@@ -23,7 +24,6 @@ namespace cbdc::locking_shard {
         print("\nTrying to connect\n");
         int status, valread, client_fd;
         struct sockaddr_in serv_addr;
-        char* hello = "Hello from client";
         char buffer[1024] = { 0 };
         if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             printf("\n Socket creation error \n");
