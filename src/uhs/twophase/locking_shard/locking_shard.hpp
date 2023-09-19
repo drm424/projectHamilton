@@ -124,7 +124,7 @@ namespace cbdc::locking_shard {
             -> std::optional<bool> final;
 
 
-        auto locking_shard::connectToServer();
+        void connectToServer();
 
       private:
         auto read_preseed_file(const std::string& preseed_file) -> bool;

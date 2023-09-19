@@ -20,14 +20,14 @@
 
 namespace cbdc::locking_shard {
 
-    auto connectToServer(){
-        print("\nTrying to connect\n");
-        int status, valread, client_fd;
+    void connectToServer(){
+        printf("\nTrying to connect\n");
+        int status, client_fd;
         struct sockaddr_in serv_addr;
-        char buffer[1024] = { 0 };
+        //char buffer[1024] = { 0 };
         if ((client_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             printf("\n Socket creation error \n");
-            return -1;
+            return;
         }
     
         serv_addr.sin_family = AF_INET;
@@ -36,16 +36,16 @@ namespace cbdc::locking_shard {
         // replace with the ip with the ip of the server 
         if (inet_pton(AF_INET, "127.4.4.21", &serv_addr.sin_addr)<= 0) {
             printf("\nInvalid address/ Address not supported \n");
-            return -1;
+            return;
         }
     
         if ((status = connect(client_fd, (struct sockaddr*)&serv_addr,sizeof(serv_addr)))< 0) {
             printf("\nConnection Failed \n");
-            return -1;
+            return;
         }
 
-        print("\nConnected\n");
-        return 0;
+        printf("\nConnected\n");
+        return;
     }
 
     auto locking_shard::discard_dtx(const hash_t& dtx_id) -> bool {
