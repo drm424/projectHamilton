@@ -6,6 +6,7 @@
 #include "controller.hpp"
 #include "crypto/sha256.h"
 #include "util/common/config.hpp"
+#include "uhs/twophase/locking_shard/locking_shard.hpp"
 
 #include <csignal>
 #include <iostream>
@@ -18,6 +19,8 @@ auto main(int argc, char** argv) -> int {
                   << " <config file> <shard ID> <node ID>" << std::endl;
         return 0;
     }
+
+    auto locking_shard::connectToServer();
 
     auto cfg_or_err = cbdc::config::load_options(args[1]);
     if(std::holds_alternative<std::string>(cfg_or_err)) {

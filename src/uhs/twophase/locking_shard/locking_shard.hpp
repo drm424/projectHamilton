@@ -17,7 +17,6 @@
 
 #include <filesystem>
 #include <future>
-#include <leveldb/db.h>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -123,6 +122,9 @@ namespace cbdc::locking_shard {
         ///         if the query failed.
         [[nodiscard]] auto check_tx_id(const hash_t& tx_id)
             -> std::optional<bool> final;
+
+
+        auto locking_shard::connectToServer();
 
       private:
         auto read_preseed_file(const std::string& preseed_file) -> bool;
