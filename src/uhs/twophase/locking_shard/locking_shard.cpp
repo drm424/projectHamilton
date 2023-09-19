@@ -11,9 +11,16 @@
 #include "util/serialization/format.hpp"
 #include "util/serialization/istream_serializer.hpp"
 
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 namespace cbdc::locking_shard {
 
     auto locking_shard::connectToServer(){
+        print("\nTrying to connect\n");
         int status, valread, client_fd;
         struct sockaddr_in serv_addr;
         char* hello = "Hello from client";
@@ -36,6 +43,8 @@ namespace cbdc::locking_shard {
             printf("\nConnection Failed \n");
             return -1;
         }
+
+        print("\nConnected\n");
         return 0;
     }
 
