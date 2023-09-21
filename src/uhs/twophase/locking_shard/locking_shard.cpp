@@ -20,7 +20,7 @@
 
 namespace cbdc::locking_shard {
 
-    void connectToServer(){
+    void locking_shard::connectToServer(){
         printf("\nTrying to connect\n");
         int status, client_fd;
         struct sockaddr_in serv_addr;

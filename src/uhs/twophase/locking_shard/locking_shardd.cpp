@@ -20,7 +20,7 @@ auto main(int argc, char** argv) -> int {
         return 0;
     }
 
-    cbdc::locking_shard::locking_shard::connectToServer();
+    //cbdc::locking_shard::locking_shard::connectToServer();
 
     auto cfg_or_err = cbdc::config::load_options(args[1]);
     if(std::holds_alternative<std::string>(cfg_or_err)) {
