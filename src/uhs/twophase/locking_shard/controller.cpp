@@ -61,13 +61,15 @@ namespace cbdc::locking_shard {
 
         m_shard = m_state_machine->get_shard_instance();
 
-        m_shard->connectToServer();
+        
 
         if(m_shard_id > (m_opts.m_locking_shard_raft_endpoints.size() - 1)) {
             m_logger->error("The shard ID is out of range "
                             "of the m_locking_shard_raft_endpoints vector.");
             return false;
         }
+        
+        
 
         for(const auto& vec : m_opts.m_locking_shard_raft_endpoints) {
             if(m_node_id > (vec.size() - 1)) {
@@ -110,6 +112,8 @@ namespace cbdc::locking_shard {
                 m_shard,
                 std::move(status_rpc_server));
 
+
+        m_shard->connectToServer();
         return true;
     }
 
